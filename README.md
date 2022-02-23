@@ -16,7 +16,7 @@ dotnet build ChatServer/ChatServer.csproj -f netcoreapp5.0 -c Release
 # Run server in one terminal on default port with TLS support
 dotnet exec ChatServer/bin/Release/netcoreapp5.0/ChatServer.dll --c ChatServer/server.pfx
 # Run client in another terminal
-dotnet exec ChatClient/bin/Release/netcoreapp5.0/ChatClient.dll username 127.0.0.1/ChatClient
+dotnet exec ChatClient/bin/Release/netcoreapp5.0/ChatClient.dll WriteYourUsername 127.0.0.1
 ```
 
 The build process will also generate .NET executables compatible with .NET frame 4.7.1 and Mono 5.
