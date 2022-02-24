@@ -1,0 +1,1 @@
+dotnet exec ChatServer/bin/Release/netcoreapp3.0/ChatServer.dll --global --c ChatServer/server.pfx
