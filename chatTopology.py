@@ -1,9 +1,11 @@
 """Custom topology example
 
-Two directly connected switches plus a host for leftSwitch and two for rightSwitch:
-
-   host --- switch --- switch --- host
-                            `--- host
+Two switches connected to each other
+                                  ,-------------------- Philips smart bulb (h6)
+                                 /------------------ Samsung Smart washing machine (h5)
+                                /-------------------------- Roku TV (h4)
+   server host --- switch --- switch---- Alice (h1)
+                                    `--- Bob (h2)
 
 Adding the 'topos' dict with a key/value pair to generate our newly defined
 topology enables one to pass in '--topo=mytopo' from the command line.
@@ -56,29 +58,34 @@ class ChatTopo( Topo ):
 
         userSwitch = self.addSwitch('s2')
 
+        self.addLink( serverSwitch, userSwitch )
+
         for h in range(n):
             host = self.addHost( 'h%s' % (h + 1))
             # 10 Mbps, 5ms delay, 2% loss, 1000 packet queue, using hierarchical token bucket (HTB) use_htb=True 
             self.addLink( host, userSwitch, bw=10, delay='5ms', loss=2,
                           max_queue_size=1000)
 
-        self.addLink( serverSwitch, userSwitch )
+
+
+        
 
         # self.simpleTest()
 
 def createMininet():
     "Create network and run simple performance test"
-    topo = ChatTopo( n=2 )
+    topo = ChatTopo( n=5 )
     net = Mininet( topo=topo, link=TCLink )
     net.start()
+    net.get('server').setIP('10.0.0.3')
 
     perfTest(net)
     
     # net.stop()
 
 def perfTest(net):
-    # pingtest(net)
-    chat(net)
+    pingtest(net)
+    # chat(net)
     
 
 def pingtest(net):
@@ -88,7 +95,8 @@ def pingtest(net):
     net.pingAll()
     print( "Testing bandwidth between h1 and server" )
     h1, server = net.get( 'h1', 'server' )
-    net.iperf( (h1, server) )
+    bandwidth = net.iperf((h1, server))
+    print(bandwidth)
 
 def chat(net):
     print('Testing Chat')
@@ -111,7 +119,7 @@ def manualBoot(net):
     myScript = "xterm.sh"
     CLI(net, script = myScript)
 
-    # time.sleep(10000)
+    time.sleep(10000)
 
     return server, alice, bob
 
