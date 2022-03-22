@@ -93,10 +93,12 @@ def pingtest(net):
     dumpNodeConnections( net.hosts )
     print( "Testing network connectivity" )
     net.pingAll()
-    print( "Testing bandwidth between h1 and server" )
-    h1, server = net.get( 'h1', 'server' )
-    bandwidth = net.iperf((h1, server))
-    print(bandwidth)
+    print( "Testing bandwidth between server an all other nodes (4.5 mins), and then between h1 and all other nodes (4.5 mins)" )
+    manualBoot(net, netTest = True)
+
+    # h1, server = net.get( 'h1', 'server' )
+    # bandwidth = net.iperf(hosts=[h1, server], l4Type = 'TCP', seconds=5)
+    # print(bandwidth)
 
 def chat(net):
     print('Testing Chat')
@@ -108,9 +110,9 @@ def chat(net):
 
     server, alice, bob = manualBoot(net)
 
-    alice.cmd("/msg Bob Hello!")
+    # alice.cmd("/msg Bob Hello!")
 
-def manualBoot(net):
+def manualBoot(net, netTest = None):
     server = net.get('server')
     serverIP = server.IP()
     print("Server Host created, lives at IP = " + serverIP)
