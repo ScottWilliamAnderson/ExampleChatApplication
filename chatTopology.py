@@ -63,8 +63,7 @@ class ChatTopo( Topo ):
         for h in range(n):
             host = self.addHost( 'h%s' % (h + 1))
             # 10 Mbps, 5ms delay, 2% loss, 1000 packet queue, using hierarchical token bucket (HTB) use_htb=True 
-            self.addLink( host, userSwitch, bw=10, delay='5ms', loss=2,
-                          max_queue_size=1000)
+            self.addLink( host, userSwitch, bw=10)
 
 
 
@@ -77,7 +76,7 @@ def createMininet():
     topo = ChatTopo( n=5 )
     net = Mininet( topo=topo, link=TCLink )
     net.start()
-    net.get('server').setIP('10.0.0.3')
+    # net.get('server').setIP('10.0.0.3')
 
     perfTest(net)
     
